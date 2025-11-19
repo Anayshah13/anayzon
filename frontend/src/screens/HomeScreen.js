@@ -13,20 +13,26 @@ function HomeScreen(props) {
   const { products, loading, error } = productList;
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(listProducts(category));
+    dispatch(listProducts(category, searchKeyword, sortOrder));
 
     return () => {
-      //
+      // cleanup
     };
-  }, [category]);
+  }, [category, searchKeyword, sortOrder]);
 
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(listProducts(category, searchKeyword, sortOrder));
   };
   const sortHandler = (e) => {
-    setSortOrder(e.target.value);
-    dispatch(listProducts(category, searchKeyword, sortOrder));
+    const value = e.target.value;
+    setSortOrder(value);
+    // dispatch using the freshly selected value
+    dispatch(listProducts(category, searchKeyword, value));
+  };
+
+  const addToCart = (productId) => {
+    props.history.push('/cart/' + productId + '?qty=1');
   };
 
   return (
@@ -65,19 +71,31 @@ function HomeScreen(props) {
                   <img
                     className="product-image"
                     src={product.image}
-                    alt="product"
+                    alt={product.name}
                   />
                 </Link>
-                <div className="product-name">
-                  <Link to={'/product/' + product._id}>{product.name}</Link>
+                <div className="product-overlay">
+                  <div className="overlay-actions">
+                    <Link className="overlay-button view" to={'/product/' + product._id}>
+                      View
+                    </Link>
+                    <button className="overlay-button add" onClick={() => addToCart(product._id)}>
+                      Add to Cart
+                    </button>
+                  </div>
                 </div>
-                <div className="product-brand">{product.brand}</div>
-                <div className="product-price">${product.price}</div>
-                <div className="product-rating">
-                  <Rating
-                    value={product.rating}
-                    text={product.numReviews + ' reviews'}
-                  />
+                <div className="product-body">
+                  <div className="product-name">
+                    <Link to={'/product/' + product._id}>{product.name}</Link>
+                  </div>
+                  <div className="product-brand">{product.brand}</div>
+                  <div className="product-price">${product.price}</div>
+                  <div className="product-rating">
+                    <Rating
+                      value={product.rating}
+                      text={product.numReviews + ' reviews'}
+                    />
+                  </div>
                 </div>
               </div>
             </li>

@@ -18,6 +18,8 @@ import OrdersScreen from './screens/OrdersScreen';
 function App() {
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
+  const cart = useSelector((state) => state.cart);
+  const cartCount = cart && cart.cartItems ? cart.cartItems.length : 0;
 
   const openMenu = () => {
     document.querySelector('.sidebar').classList.add('open');
@@ -30,23 +32,41 @@ function App() {
       <div className="grid-container">
         <header className="header">
           <div className="brand">
-            <button onClick={openMenu}>&#9776;</button>
-            <Link to="/">amazona</Link>
+            <button className="menu-button" onClick={openMenu} aria-label="Open menu">
+              <i className="fa fa-bars" aria-hidden="true"></i>
+            </button>
+            <Link to="/" className="brand-link"> 
+              <i className="fa fa-shopping-bag brand-icon" aria-hidden="true"></i>
+              <span className="brand-text">anayzon</span>
+            </Link>
           </div>
           <div className="header-links">
-            <a href="cart.html">Cart</a>
+            <Link to="/cart">
+              <i className="fa fa-shopping-cart" aria-hidden="true"></i>
+              <span className="link-text">Cart</span>
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            </Link>
             {userInfo ? (
-              <Link to="/profile">{userInfo.name}</Link>
+              <Link to="/profile">
+                <i className="fa fa-user" aria-hidden="true"></i>
+                <span className="link-text">{userInfo.name}</span>
+              </Link>
             ) : (
-              <Link to="/signin">Sign In</Link>
+              <Link to="/signin">
+                <i className="fa fa-sign-in" aria-hidden="true"></i>
+                <span className="link-text">Sign In</span>
+              </Link>
             )}
             {userInfo && userInfo.isAdmin && (
               <div className="dropdown">
-                <a href="#">Admin</a>
+                <a href="#">
+                  <i className="fa fa-cog" aria-hidden="true"></i>
+                  <span className="link-text">Admin</span>
+                </a>
                 <ul className="dropdown-content">
                   <li>
-                    <Link to="/orders">Orders</Link>
-                    <Link to="/products">Products</Link>
+                    <Link to="/orders"><i className="fa fa-list-alt" aria-hidden="true"></i> Orders</Link>
+                    <Link to="/products"><i className="fa fa-box" aria-hidden="true"></i> Products</Link>
                   </li>
                 </ul>
               </div>
@@ -60,14 +80,34 @@ function App() {
           </button>
           <ul className="categories">
             <li>
-              <Link to="/category/Pants">Pants</Link>
+              <Link to="/category/Pants">
+                <i className="fa fa-tag" aria-hidden="true"></i>
+                <span>Pants</span>
+              </Link>
             </li>
 
             <li>
-              <Link to="/category/Shirts">Shirts</Link>
+              <Link to="/category/Shirts">
+                <i className="fa fa-tag" aria-hidden="true"></i>
+                <span>Shirts</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/category/Accessories">
+                <i className="fa fa-star" aria-hidden="true"></i>
+                <span>Accessories</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/category/Sale">
+                <i className="fa fa-bolt" aria-hidden="true"></i>
+                <span>Sale</span>
+              </Link>
             </li>
           </ul>
         </aside>
+        {/* overlay shown when sidebar open - click to close */}
+        <div className="screen-overlay" onClick={closeMenu} />
         <main className="main">
           <div className="content">
             <Route path="/orders" component={OrdersScreen} />

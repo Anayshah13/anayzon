@@ -60,8 +60,9 @@ function CartScreen(props) {
                         <option key={x + 1} value={x + 1}>{x + 1}</option>
                       )}
                     </select>
-                    <button type="button" className="button" onClick={() => removeFromCartHandler(item.product)} >
-                      Delete
+                    <button type="button" className="button delete-btn" onClick={() => removeFromCartHandler(item.product)} aria-label={`Remove ${item.name}`}>
+                      <i className="fa fa-trash" aria-hidden="true"></i>
+                      <span className="visually-hidden">Delete</span>
                     </button>
                   </div>
                 </div>

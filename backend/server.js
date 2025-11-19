@@ -9,14 +9,6 @@ import orderRoute from './routes/orderRoute';
 import uploadRoute from './routes/uploadRoute';
 
 const mongodbUrl = config.MONGODB_URL;
-mongoose
-  .connect(mongodbUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  })
-  .catch((error) => console.log(error.reason));
-
 const app = express();
 app.use(bodyParser.json());
 app.use('/api/uploads', uploadRoute);
@@ -32,6 +24,17 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(`${__dirname}/../frontend/build/index.html`));
 });
 
-app.listen(config.PORT, () => {
-  console.log('Server started at http://localhost:5000');
-});
+// Connect to MongoDB, then start server
+mongoose
+  .connect(mongodbUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    app.listen(config.PORT, () => {
+      console.log(`Server started at http://localhost:${config.PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error.message || error);
+  });
