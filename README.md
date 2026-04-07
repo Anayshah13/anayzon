@@ -1,6 +1,6 @@
 # Anayzon
 
-Full-stack e-commerce app (React + Express + MongoDB).
+Amazon-style e-commerce with an updated UI on the original tutorial stack—React frontend and integrated Express/MongoDB backend.
 
 ## Run locally
 
